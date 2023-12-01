@@ -1,23 +1,17 @@
 package ru.deltadelete.lab13.adapter
 
 import android.annotation.SuppressLint
-import android.media.Image
-import android.os.Build.VERSION.SDK_INT
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.Coil
-import coil.ImageLoader
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.disk.DiskCache
 import coil.load
-import coil.memory.MemoryCache
-import coil.request.ImageRequest
 import ru.deltadelete.lab13.R
 import ru.deltadelete.lab13.databinding.ImageItemBinding
+
 
 class ImageAdapter(
     private val dataSet: MutableList<String>
@@ -45,6 +39,13 @@ class ImageAdapter(
 //                    ).data(item)
 //                }
             )
+
+            binding.imageView.setOnLongClickListener {
+                val clipman = it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("image", item)
+                clipman.setPrimaryClip(clip)
+                true
+            }
         }
     }
 
