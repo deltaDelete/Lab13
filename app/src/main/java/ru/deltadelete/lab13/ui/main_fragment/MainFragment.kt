@@ -1,17 +1,18 @@
 package ru.deltadelete.lab13.ui.main_fragment
 
-import android.media.Image
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.size
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.deltadelete.lab13.adapter.ImageAdapter
+import ru.deltadelete.lab13.adapter.ImageUrlAdapter
 import ru.deltadelete.lab13.databinding.FragmentMainBinding
+import ru.deltadelete.lab13.utils.addOnScrolled
 
 class MainFragment : Fragment() {
 
@@ -32,24 +33,22 @@ class MainFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
+
+        binding.recyclerView.addOnScrolled { view, dx, dy ->
+            if ((binding.recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() == binding.recyclerView.adapter!!.itemCount - 1) {
+                viewModel.loadMore()
+                // TODO: Подгрузка по мере прокрутки 
+            }
+        }
+
         viewModel.items.observe(viewLifecycleOwner) {
-//            (binding.recyclerView.adapter as ImageAdapter).clear()
-//            (binding.recyclerView.adapter as ImageAdapter).addAll(it)
-//            (binding.recyclerView.adapter as ImageAdapter).notifyDataSetChanged()
-            binding.recyclerView.adapter = ImageAdapter(it.toMutableList())
+            binding.recyclerView.adapter = ImageUrlAdapter(it.toMutableList())
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    fun <T> LiveData<T>.observe(
-        lifecycleOwner: LifecycleOwner,
-        observer: (T) -> Unit
-    ) {
-        this.observe(lifecycleOwner, observer)
     }
 }
 

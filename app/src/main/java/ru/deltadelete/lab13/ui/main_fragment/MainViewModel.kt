@@ -41,4 +41,13 @@ class MainViewModel : ViewModel() {
         val list = api.getManyRandom(category = category)
         items.postValue(list)
     }
+
+    fun loadMore() {
+        if (items.value?.size == 0) return;
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = api.getManyRandom()
+            val prevItems = items.value!!
+            items.postValue(prevItems.plus(list))
+        }
+    }
 }

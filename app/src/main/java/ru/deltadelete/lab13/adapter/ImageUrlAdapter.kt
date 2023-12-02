@@ -13,22 +13,21 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import ru.deltadelete.lab13.R
-import ru.deltadelete.lab13.api.models.Image
 import ru.deltadelete.lab13.databinding.ImageItemBinding
 
 
-class ImageAdapter(
-    private val dataSet: MutableList<Image>
+class ImageUrlAdapter(
+    private val dataSet: MutableList<String>
 ) :
-    RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ImageUrlAdapter.ViewHolder>() {
 
     inner class ViewHolder(
         private val binding: ImageItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Image) {
+        fun bind(item: String) {
             val radius = binding.card.radius - binding.container.paddingStart / 2
             binding.imageView.load(
-                data = item.url,
+                data = item,
                 builder = {
                     this.transformations(RoundedCornersTransformation(radius))
                 }
@@ -37,7 +36,7 @@ class ImageAdapter(
             binding.buttonLink.setOnClickListener {
                 val clipman =
                     it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("image", item.url)
+                val clip = ClipData.newPlainText("image", item)
                 clipman.setPrimaryClip(clip)
                 Toast.makeText(binding.root.context, R.string.copied, Toast.LENGTH_LONG).show()
             }
@@ -61,28 +60,28 @@ class ImageAdapter(
         return dataSet.size
     }
 
-    fun add(item: Image) {
+    fun add(item: String) {
         dataSet.add(item)
     }
 
 
-    fun remove(item: Image) {
+    fun remove(item: String) {
         dataSet.remove(item)
     }
 
-    fun addAll(vararg items: Image) {
+    fun addAll(vararg items: String) {
         val before = dataSet.lastIndex
         dataSet.addAll(items)
         notifyItemRangeInserted(before, dataSet.lastIndex)
     }
 
-    fun addAll(items: List<Image>) {
+    fun addAll(items: List<String>) {
         val before = dataSet.lastIndex
         dataSet.addAll(items)
         notifyItemRangeInserted(before, dataSet.lastIndex)
     }
 
-    fun removeAll(vararg items: Image) {
+    fun removeAll(vararg items: String) {
         dataSet.removeAll(items.toSet())
     }
 
