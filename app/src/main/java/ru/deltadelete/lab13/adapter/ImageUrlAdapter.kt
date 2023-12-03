@@ -70,15 +70,15 @@ class ImageUrlAdapter(
     }
 
     fun addAll(vararg items: String) {
-        val before = dataSet.lastIndex
+        val start = dataSet.size
         dataSet.addAll(items)
-        notifyItemRangeInserted(before, dataSet.lastIndex)
+        notifyItemRangeInserted(start, items.size)
     }
 
     fun addAll(items: List<String>) {
-        val before = dataSet.lastIndex
+        val start = dataSet.size
         dataSet.addAll(items)
-        notifyItemRangeInserted(before, dataSet.lastIndex)
+        notifyItemRangeInserted(start, items.size)
     }
 
     fun removeAll(vararg items: String) {
@@ -90,4 +90,15 @@ class ImageUrlAdapter(
         dataSet.clear()
         notifyDataSetChanged()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun replaceAll(items: List<String>) {
+        dataSet.clear()
+        dataSet.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    val size: Int
+        get() = dataSet.size
+
 }

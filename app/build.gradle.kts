@@ -58,6 +58,7 @@ dependencies {
     implementation("io.coil-kt:coil:2.5.0")
     implementation("io.coil-kt:coil-gif:2.5.0")
     implementation("com.jsibbold:zoomage:1.3.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

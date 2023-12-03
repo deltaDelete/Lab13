@@ -12,29 +12,28 @@ import ru.deltadelete.lab13.api.WaifuPicsApiImpl
 
 class MainViewModel : ViewModel() {
     val items = MutableLiveData<List<String>>(emptyList())
-    private val selectedCategory: MutableLiveData<WaifuPicsApi.Categories> =
+    val moreItems = MutableLiveData<List<String>>(emptyList())
+    val selectedCategory: MutableLiveData<WaifuPicsApi.Categories> =
         MutableLiveData(WaifuPicsApi.Categories.waifu)
+    val loading = MutableLiveData(true)
 
-    fun getSelectedCategory(): LiveData<WaifuPicsApi.Categories> {
-        return selectedCategory as LiveData<WaifuPicsApi.Categories>
-    }
+    val flow: MutableStateFlow<String> = MutableStateFlow("")
 
     private val api: WaifuPicsApi = WaifuPicsApiImpl()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            loading.postValue(true)
             loadImages()
+            loading.postValue(false)
         }
         selectedCategory.observeForever {
             viewModelScope.launch(Dispatchers.IO) {
+                loading.postValue(true)
                 loadImages(it)
+                loading.postValue(false)
             }
         }
-    }
-
-    private fun loadImages() {
-        val list = api.getManyRandom()
-        items.postValue(list)
     }
 
     private fun loadImages(category: WaifuPicsApi.Categories = WaifuPicsApi.Categories.waifu) {
@@ -43,11 +42,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun loadMore() {
-        if (items.value?.size == 0) return;
         viewModelScope.launch(Dispatchers.IO) {
-            val list = api.getManyRandom()
-            val prevItems = items.value!!
-            items.postValue(prevItems.plus(list))
+            val list = api.getManyRandom(category = selectedCategory.value ?: WaifuPicsApi.Categories.waifu)
+            moreItems.postValue(list)
         }
     }
 }

@@ -4,4 +4,5 @@
     <string name="action_settings">Настройки</string>
     <string name="main_fragment_label">Главная</string>
     <string name="copied">Ссылка на изображение успешно скопирвана</string>
+    <string name="loading_more">Загружаю еще</string>
 </resources>
