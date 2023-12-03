@@ -91,4 +91,14 @@ class ImageAdapter(
         dataSet.clear()
         notifyDataSetChanged()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun replaceAll(items: List<Image>) {
+        dataSet.clear()
+        dataSet.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    val size: Int
+        get() = dataSet.size
 }

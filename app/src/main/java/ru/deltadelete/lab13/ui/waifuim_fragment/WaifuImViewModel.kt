@@ -26,4 +26,6 @@ class WaifuImViewModel : ViewModel() {
         val list = api.search(many = true).await()
         items.postValue(list.images)
     }
+
+    // TODO: loadMore with include previous image ids
 }
