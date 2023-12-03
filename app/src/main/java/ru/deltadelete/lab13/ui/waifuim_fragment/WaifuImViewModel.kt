@@ -23,7 +23,7 @@ class WaifuImViewModel : ViewModel() {
     }
 
     private suspend fun loadImages() {
-        val list = api.search().await()
+        val list = api.search(many = true).await()
         items.postValue(list.images)
     }
 }
