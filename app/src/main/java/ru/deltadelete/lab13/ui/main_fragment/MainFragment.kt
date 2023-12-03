@@ -36,6 +36,42 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
+
+        initRecyclerView()
+
+        initChipGroup()
+
+        requireActivity().addMenuProvider(MenuProvider(), viewLifecycleOwner)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    inner class MenuProvider : androidx.core.view.MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.menu_debug, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return when (menuItem.itemId) {
+                R.id.menu_info -> {
+                    Snackbar.make(
+                        requireView(),
+                        (binding.recyclerView.adapter as ImageUrlAdapter).size.toString(),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+    }
+
+    private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
@@ -74,7 +110,9 @@ class MainFragment : Fragment() {
             binding.loading.visibility = if (it) View.VISIBLE else View.GONE
             binding.recyclerView.visibility = if (it) View.INVISIBLE else View.VISIBLE
         }
+    }
 
+    private fun initChipGroup() {
         categories.forEach {
             binding.chipGrop.addView(Chip(context).apply {
                 isCheckable = true
@@ -97,35 +135,6 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-        requireActivity().addMenuProvider(MenuProvider(), viewLifecycleOwner)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    inner class MenuProvider : androidx.core.view.MenuProvider {
-        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            menuInflater.inflate(R.menu.menu_debug, menu)
-        }
-
-        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            return when (menuItem.itemId) {
-                R.id.menu_info -> {
-                    Snackbar.make(
-                        requireView(),
-                        (binding.recyclerView.adapter as ImageUrlAdapter).size.toString(),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                    true
-                }
-
-                else -> false
-            }
-        }
-
     }
 }
 
