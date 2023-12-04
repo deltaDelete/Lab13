@@ -44,7 +44,8 @@ class WaifuImViewModel : ViewModel() {
     }
 
     private suspend fun loadImages(tags: List<String>) {
-        val list = api.search(many = true, includedTags = tags)
+        val list = api.search(many = true, includedTags = tags).await()
+        items.postValue(list.images)
     }
 
     private suspend fun loadTags() {
@@ -52,5 +53,10 @@ class WaifuImViewModel : ViewModel() {
         tags.postValue(items)
     }
 
-    // TODO: loadMore with include previous image ids
+    fun loadMore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = api.search(many = true, excludedFiles = items.value!!.map { it.imageId }, includedTags = tags.value!!).await().images
+            moreItems.postValue(list)
+        }
+    }
 }
