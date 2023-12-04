@@ -11,10 +11,10 @@ import ru.deltadelete.lab13.api.models.TagsResponse
 interface WaifuImRepository {
     @GET("/search")
     fun search(
-        @Query("included_tags") includedTags: List<String> = emptyList(),
-        @Query("excluded_tags") excludedTags: List<String> = emptyList(),
-        @Query("included_files") includedFiles: List<Int> = emptyList(),
-        @Query("excluded_files") excludedFiles: List<Int> = emptyList(),
+        @Query("included_tags[]") includedTags: List<String> = emptyList(),
+        @Query("excluded_tags[]") excludedTags: List<String> = emptyList(),
+        @Query("included_files[]") includedFiles: List<Int> = emptyList(),
+        @Query("excluded_files[]") excludedFiles: List<Int> = emptyList(),
         @Query("is_nsfw") isNsfw: Boolean = false,
         @Query("gif") gif: Boolean? = null,
         @Query("orientation") orientation: Orientation? = null,
