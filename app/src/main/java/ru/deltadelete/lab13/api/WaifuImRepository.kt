@@ -6,12 +6,13 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.deltadelete.lab13.api.models.Response
 import ru.deltadelete.lab13.api.models.Tag
+import ru.deltadelete.lab13.api.models.TagsResponse
 
 interface WaifuImRepository {
     @GET("/search")
     fun search(
-        @Query("included_tags") includedTags: List<Tag> = emptyList(),
-        @Query("excluded_tags") excludedTags: List<Tag> = emptyList(),
+        @Query("included_tags") includedTags: List<String> = emptyList(),
+        @Query("excluded_tags") excludedTags: List<String> = emptyList(),
         @Query("included_files") includedFiles: List<Int> = emptyList(),
         @Query("excluded_files") excludedFiles: List<Int> = emptyList(),
         @Query("is_nsfw") isNsfw: Boolean = false,
@@ -23,6 +24,9 @@ interface WaifuImRepository {
         @Query("height") height: OperatedInteger? = null,
         @Query("byte_size") byteSize: OperatedInteger? = null,
     ): Call<Response>
+
+    @GET("/tags")
+    fun tags(): Call<TagsResponse>
 
     enum class Orientation {
         Portrait,

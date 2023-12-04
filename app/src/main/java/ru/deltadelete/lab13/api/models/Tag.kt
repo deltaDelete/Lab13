@@ -5,4 +5,8 @@ data class Tag(
     val name: String,
     val description: String,
     val isNsfw: Boolean
-)
+) {
+    override fun toString(): String {
+        return name
+    }
+}
