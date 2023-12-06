@@ -1,20 +1,19 @@
 package ru.deltadelete.lab13.ui.waifuim_fragment
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.request.Tags
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.await
-import ru.deltadelete.lab13.api.RetrofitClient
-import ru.deltadelete.lab13.api.WaifuPicsApi
-import ru.deltadelete.lab13.api.models.Image
+import ru.deltadelete.lab13.api.retrofit.RetrofitClient
+import ru.deltadelete.lab13.api.retrofit.models.Image
 
 class WaifuImViewModel : ViewModel() {
-    val items = MutableLiveData<List<Image>>(emptyList())
-    val moreItems = MutableLiveData<List<Image>>(emptyList())
+    private var images: MutableList<Image> = emptyList<Image>().toMutableList()
+    val items = MutableStateFlow<ItemsCallback<Image>>(ItemsCallback.Empty())
     val includedTags = MutableLiveData<List<String>>(emptyList())
     val tags = MutableLiveData<List<String>>(emptyList())
     val loading = MutableLiveData(true)
@@ -22,30 +21,41 @@ class WaifuImViewModel : ViewModel() {
     private val api = RetrofitClient.waifuRepo
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             loading.postValue(true)
             loadImages()
             loadTags()
             loading.postValue(false)
+
+            items.collect() {
+                if (it is ItemsCallback.NewItems) {
+                    if (it.clear) {
+                        images.clear()
+                    }
+                    images.addAll(it.items)
+                }
+            }
         }
 
-        includedTags.observeForever {
-            viewModelScope.launch {
-                loading.postValue(true)
-                loadImages(it)
-                loading.postValue(false)
+        viewModelScope.launch {
+            includedTags.observeForever {
+                viewModelScope.launch {
+                    loading.postValue(true)
+                    loadImages(it)
+                    loading.postValue(false)
+                }
             }
         }
     }
 
     private suspend fun loadImages() {
         val list = api.search(many = true).await()
-        items.postValue(list.images)
+        items.value = ItemsCallback.NewItems(list.images, true)
     }
 
     private suspend fun loadImages(tags: List<String>) {
         val list = api.search(many = true, includedTags = tags).await()
-        items.postValue(list.images)
+        items.value = ItemsCallback.NewItems(list.images, true)
     }
 
     private suspend fun loadTags() {
@@ -55,8 +65,18 @@ class WaifuImViewModel : ViewModel() {
 
     fun loadMore() {
         viewModelScope.launch(Dispatchers.IO) {
-            val list = api.search(many = true, excludedFiles = items.value!!.map { it.imageId }, includedTags = tags.value!!).await().images
-            moreItems.postValue(list)
+            val list = api.search(
+                many = true,
+                excludedFiles = images.map { it.imageId },
+                includedTags = tags.value!!
+            ).await()
+            items.value = ItemsCallback.NewItems(list.images)
         }
     }
+}
+
+sealed class ItemsCallback<T> {
+    class Empty<T> : ItemsCallback<T>()
+
+    data class NewItems<T>(val items: List<T>, val clear: Boolean = false) : ItemsCallback<T>()
 }

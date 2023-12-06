@@ -1,12 +1,12 @@
-package ru.deltadelete.lab13.api
+package ru.deltadelete.lab13.api.retrofit.interfaces
 
 import android.graphics.drawable.GradientDrawable.Orientation
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.deltadelete.lab13.api.models.Response
-import ru.deltadelete.lab13.api.models.Tag
-import ru.deltadelete.lab13.api.models.TagsResponse
+import ru.deltadelete.lab13.api.retrofit.models.Response
+import ru.deltadelete.lab13.api.retrofit.models.Tag
+import ru.deltadelete.lab13.api.retrofit.models.TagsResponse
 
 interface WaifuImRepository {
     @GET("/search")

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import ru.deltadelete.lab13.R
-import ru.deltadelete.lab13.api.models.Image
+import ru.deltadelete.lab13.api.retrofit.models.Image
 import ru.deltadelete.lab13.databinding.ImageItemBinding
 
 
@@ -33,6 +33,7 @@ class ImageAdapter(
                     this.transformations(RoundedCornersTransformation(radius))
                 }
             )
+            // TODO: Glide
 
             binding.buttonLink.setOnClickListener {
                 val clipman =

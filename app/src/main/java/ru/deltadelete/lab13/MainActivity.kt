@@ -11,6 +11,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import coil.Coil
 import coil.ImageLoader
 import coil.decode.GifDecoder
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 .diskCache {
                     DiskCache.Builder()
                         .directory(this.cacheDir.resolve("image_cache"))
-                        .maxSizeBytes(100*1024*1024)
+                        .maxSizeBytes(100 * 1024 * 1024)
                         .build()
                 }
                 .build()
@@ -59,8 +61,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.bottomNavigation.setupWithNavController(navController)
+        NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -79,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                     .navigate(R.id.WaifuImFragment)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -1,5 +1,6 @@
 package ru.deltadelete.lab13.ui.waifuim_fragment
 
+import android.media.Image
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,11 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.deltadelete.lab13.R
 import ru.deltadelete.lab13.adapter.ImageAdapter
 import ru.deltadelete.lab13.databinding.FragmentWaifuImBinding
@@ -78,13 +83,18 @@ class WaifuImFragment : Fragment() {
         }
 
         binding.recyclerView.adapter = ImageAdapter(mutableListOf())
-        viewModel.items.observe(viewLifecycleOwner) {
-            val adapter = binding.recyclerView.adapter as ImageAdapter
-            adapter.replaceAll(it)
-        }
-        viewModel.moreItems.observe(viewLifecycleOwner) {
-            val adapter = binding.recyclerView.adapter as ImageAdapter
-            adapter.addAll(it)
+
+        lifecycleScope.launch {
+            viewModel.items.collect {
+                val adapter = binding.recyclerView.adapter as ImageAdapter
+                if (it is ItemsCallback.Empty) {
+                    adapter.clear()
+                }
+                if (it is ItemsCallback.NewItems) {
+                    if (it.clear) adapter.clear()
+                    adapter.addAll(it.items)
+                }
+            }
         }
 
         viewModel.loading.observe(viewLifecycleOwner) {

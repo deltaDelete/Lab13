@@ -1,4 +1,4 @@
-package ru.deltadelete.lab13.api.models
+package ru.deltadelete.lab13.api.retrofit.models
 
 import java.util.Date
 

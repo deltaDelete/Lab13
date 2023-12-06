@@ -5,5 +5,7 @@
     <string name="main_fragment_label">Main</string>
     <string name="copied">Successfully copied image url</string>
     <string name="loading_more">Loading more</string>
+    <string name="waifu_pics" translatable="false">Waifu.Pics</string>
+    <string name="waifu_im" translatable="false">Waifu.Im</string>
 
 </resources>
