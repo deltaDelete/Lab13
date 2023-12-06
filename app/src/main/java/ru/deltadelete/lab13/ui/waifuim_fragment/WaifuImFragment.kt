@@ -39,17 +39,8 @@ class WaifuImFragment : Fragment() {
         binding = FragmentWaifuImBinding.inflate(inflater, container, false)
 
         initRecyclerView()
-
         initChipGroup()
 
-//        binding.recyclerView.layoutManager = LinearLayoutManager(
-//            context,
-//            LinearLayoutManager.VERTICAL,
-//            false
-//        )
-//        viewModel.items.observe(viewLifecycleOwner) {
-//            binding.recyclerView.adapter = ImageAdapter(it.toMutableList())
-//        }
         return binding.root
     }
 
@@ -84,7 +75,7 @@ class WaifuImFragment : Fragment() {
 
         binding.recyclerView.adapter = ImageAdapter(mutableListOf())
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.items.collect {
                 val adapter = binding.recyclerView.adapter as ImageAdapter
                 if (it is ItemsCallback.Empty) {

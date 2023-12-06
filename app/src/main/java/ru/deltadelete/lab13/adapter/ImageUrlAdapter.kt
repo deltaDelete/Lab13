@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.deltadelete.lab13.R
 import ru.deltadelete.lab13.databinding.ImageItemBinding
 
@@ -20,18 +20,24 @@ class ImageUrlAdapter(
     private val dataSet: MutableList<String>
 ) :
     RecyclerView.Adapter<ImageUrlAdapter.ViewHolder>() {
-
+    // TODO: пофиксить говнину после загрузки на второй страницы
     inner class ViewHolder(
         private val binding: ImageItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String) {
-            val radius = binding.card.radius - binding.container.paddingStart / 2
-            binding.imageView.load(
-                data = item,
-                builder = {
-                    this.transformations(RoundedCornersTransformation(radius))
-                }
-            )
+            val radius = (binding.card.radius - binding.container.paddingStart).toInt()
+            if (item.endsWith("gif")) {
+                Glide.with(binding.root)
+                    .asGif()
+                    .load(item)
+                    .transform(RoundedCorners(radius))
+                    .into(binding.imageView)
+            } else {
+                Glide.with(binding.root)
+                    .load(item)
+                    .transform(RoundedCorners(radius))
+                    .into(binding.imageView)
+            }
 
             binding.buttonLink.setOnClickListener {
                 val clipman =

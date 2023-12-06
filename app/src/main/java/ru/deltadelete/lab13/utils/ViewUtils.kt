@@ -7,6 +7,7 @@ import androidx.core.view.doOnDetach
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 fun View.scale(scale: Float) {
     scaleX = scale
@@ -36,4 +37,14 @@ fun RecyclerView.addOnScrolled(func: (view: RecyclerView, dx: Int, dy: Int) -> U
             func(recyclerView, dx, dy)
         }
     })
+}
+
+fun <T : Any, R : Any> T.doIf(
+    predicate: ((scope: T) -> Boolean),
+    action: (T.() -> R)
+): Any {
+    if (predicate(this)) {
+        return this.action()
+    }
+    return this
 }

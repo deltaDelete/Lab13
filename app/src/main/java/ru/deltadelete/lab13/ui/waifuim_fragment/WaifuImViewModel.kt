@@ -50,12 +50,12 @@ class WaifuImViewModel : ViewModel() {
 
     private suspend fun loadImages() {
         val list = api.search(many = true).await()
-        items.value = ItemsCallback.NewItems(list.images, true)
+        items.emit(ItemsCallback.NewItems(list.images, true))
     }
 
     private suspend fun loadImages(tags: List<String>) {
         val list = api.search(many = true, includedTags = tags).await()
-        items.value = ItemsCallback.NewItems(list.images, true)
+        items.emit(ItemsCallback.NewItems(list.images, true))
     }
 
     private suspend fun loadTags() {
@@ -70,7 +70,7 @@ class WaifuImViewModel : ViewModel() {
                 excludedFiles = images.map { it.imageId },
                 includedTags = tags.value!!
             ).await()
-            items.value = ItemsCallback.NewItems(list.images)
+            items.emit(ItemsCallback.NewItems(list.images))
         }
     }
 }

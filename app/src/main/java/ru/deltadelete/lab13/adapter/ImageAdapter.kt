@@ -10,8 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import ru.deltadelete.lab13.R
 import ru.deltadelete.lab13.api.retrofit.models.Image
 import ru.deltadelete.lab13.databinding.ImageItemBinding
@@ -22,18 +23,28 @@ class ImageAdapter(
 ) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
+    companion object {
+        val factory = DrawableCrossFadeFactory
+            .Builder().setCrossFadeEnabled(true).build()
+    }
+
     inner class ViewHolder(
         private val binding: ImageItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Image) {
-            val radius = binding.card.radius - binding.container.paddingStart / 2
-            binding.imageView.load(
-                data = item.url,
-                builder = {
-                    this.transformations(RoundedCornersTransformation(radius))
-                }
-            )
-            // TODO: Glide
+            val radius = (binding.card.radius - binding.container.paddingStart).toInt()
+            if (item.url.endsWith("gif")) {
+                Glide.with(binding.root)
+                    .asGif()
+                    .load(item.url)
+                    .transform(RoundedCorners(radius))
+                    .into(binding.imageView)
+            } else {
+                Glide.with(binding.root)
+                    .load(item.url)
+                    .transform(RoundedCorners(radius))
+                    .into(binding.imageView)
+            }
 
             binding.buttonLink.setOnClickListener {
                 val clipman =
