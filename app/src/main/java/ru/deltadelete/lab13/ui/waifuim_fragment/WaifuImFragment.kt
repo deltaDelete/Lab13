@@ -55,6 +55,8 @@ class WaifuImFragment : Fragment() {
             false
         )
 
+        binding.recyclerView.itemAnimator = null
+
         binding.recyclerView.addOnScrolled { view, dx, dy ->
             if (dy < 50) return@addOnScrolled
             val linearLayoutManager = view.layoutManager as LinearLayoutManager
@@ -63,7 +65,7 @@ class WaifuImFragment : Fragment() {
             if (lastCompletelyVisibleItemPosition == RecyclerView.NO_POSITION) return@addOnScrolled
 
             val adapter = view.adapter as ImageAdapter
-            if (lastCompletelyVisibleItemPosition + 1 >= adapter.size - 1) {
+            if (lastCompletelyVisibleItemPosition >= adapter.size - 1) {
                 Snackbar.make(
                     requireView(),
                     R.string.loading_more,

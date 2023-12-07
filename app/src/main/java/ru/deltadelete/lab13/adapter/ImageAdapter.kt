@@ -73,27 +73,36 @@ class ImageAdapter(
         return dataSet.size
     }
 
+    @Synchronized
     fun add(item: Image) {
         dataSet.add(item)
+        notifyItemInserted(dataSet.lastIndex)
     }
 
 
+    @Synchronized
     fun remove(item: Image) {
-        dataSet.remove(item)
+        val position = dataSet.indexOf(item)
+        if (dataSet.remove(item)) {
+            notifyItemRemoved(position)
+        }
     }
 
+    @Synchronized
     fun addAll(vararg items: Image) {
         val before = dataSet.lastIndex
         dataSet.addAll(items)
         notifyItemRangeInserted(before, dataSet.lastIndex)
     }
 
+    @Synchronized
     fun addAll(items: List<Image>) {
         val before = dataSet.lastIndex
         dataSet.addAll(items)
         notifyItemRangeInserted(before, dataSet.lastIndex)
     }
 
+    @Synchronized
     fun removeAll(vararg items: Image) {
         dataSet.removeAll(items.toSet())
     }
@@ -104,6 +113,7 @@ class ImageAdapter(
         notifyDataSetChanged()
     }
 
+    @Synchronized
     @SuppressLint("NotifyDataSetChanged")
     fun replaceAll(items: List<Image>) {
         dataSet.clear()
