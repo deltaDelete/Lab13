@@ -5,4 +5,12 @@
     <string name="main_fragment_label">Главная</string>
     <string name="copied">Ссылка на изображение успешно скопирвана</string>
     <string name="loading_more">Загружаю еще</string>
+    <string name="author">Автор: %s</string>
+    <string name="link">Ссылка: %s</string>
+    <string name="dominant_color">Доминантный цвет: %s</string>
+    <string name="source">Источник: %s</string>
+    <string name="height">Высота: %d</string>
+    <string name="width">Ширина: %d</string>
+    <string name="byte_size">Вес в байтах: %d</string>
+    <string name="uploaded_at">Дата загрузки: %s</string>
 </resources>

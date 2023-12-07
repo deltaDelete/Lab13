@@ -7,5 +7,13 @@
     <string name="loading_more">Loading more</string>
     <string name="waifu_pics" translatable="false">Waifu.Pics</string>
     <string name="waifu_im" translatable="false">Waifu.Im</string>
+    <string name="author">Author: %s</string>
+    <string name="link">Link: %s</string>
+    <string name="dominant_color">Dominant color: %s</string>
+    <string name="source">Source: %s</string>
+    <string name="height">Height: %d</string>
+    <string name="width">Width: %d</string>
+    <string name="byte_size">Byte size: %d</string>
+    <string name="uploaded_at">Uploaded at: %s</string>
 
 </resources>

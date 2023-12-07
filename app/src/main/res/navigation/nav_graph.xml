@@ -15,5 +15,19 @@
         android:id="@+id/WaifuImFragment"
         android:name="ru.deltadelete.lab13.ui.waifuim_fragment.WaifuImFragment"
         android:label="Waifu.Im"
-        tools:layout="@layout/fragment_waifu_im" />
+        tools:layout="@layout/fragment_waifu_im" >
+        <action
+            android:id="@+id/action_WaifuImFragment_to_ImageDetailsFragment"
+            app:destination="@id/ImageDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ImageDetailsFragment"
+        android:name="ru.deltadelete.lab13.ui.image_details_fragment.ImageDetailsFragment"
+        android:label="Подробнее"
+        tools:layout="@layout/fragment_image_details" >
+        <argument
+            android:name="IMAGE"
+            app:argType="string" />
+    </fragment>
 </navigation>

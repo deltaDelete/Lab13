@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.await
 import ru.deltadelete.lab13.api.retrofit.RetrofitClient
@@ -67,7 +66,7 @@ class WaifuImViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = api.search(
                 many = true,
-                excludedFiles = images.map { it.imageId },
+                excludedFiles = images.map { it.image_id },
                 includedTags = tags.value!!
             ).await()
             items.emit(ItemsCallback.NewItems(list.images))

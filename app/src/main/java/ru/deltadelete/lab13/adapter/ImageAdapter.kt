@@ -23,15 +23,12 @@ class ImageAdapter(
 ) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
-    companion object {
-        val factory = DrawableCrossFadeFactory
-            .Builder().setCrossFadeEnabled(true).build()
-    }
+    private var onItemClick: ((viewHolder: ViewHolder, item: Image, position: Int) -> Unit)? = null
 
     inner class ViewHolder(
         private val binding: ImageItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Image) {
+        fun bind(item: Image, position: Int) {
             val radius = (binding.card.radius - binding.container.paddingStart).toInt()
             if (item.url.endsWith("gif")) {
                 Glide.with(binding.root)
@@ -55,6 +52,10 @@ class ImageAdapter(
             }
 
             binding.buttonCopy.visibility = View.GONE
+
+            binding.card.setOnClickListener {
+                onItemClick?.invoke(this, item, position)
+            }
         }
     }
 
@@ -66,11 +67,16 @@ class ImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+        holder.bind(dataSet[position], position)
     }
 
     override fun getItemCount(): Int {
         return dataSet.size
+    }
+
+    fun onItemClick(action: (viewHolder: ViewHolder, item: Image, position: Int) -> Unit)
+    {
+        onItemClick = action
     }
 
     @Synchronized

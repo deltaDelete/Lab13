@@ -1,7 +1,5 @@
 package ru.deltadelete.lab13.ui.waifuim_fragment
 
-import android.media.Image
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,17 +8,19 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.deltadelete.lab13.R
 import ru.deltadelete.lab13.adapter.ImageAdapter
 import ru.deltadelete.lab13.databinding.FragmentWaifuImBinding
+import ru.deltadelete.lab13.ui.image_details_fragment.ImageDetailsFragment
 import ru.deltadelete.lab13.utils.addOnScrolled
 
 class WaifuImFragment : Fragment() {
@@ -75,7 +75,16 @@ class WaifuImFragment : Fragment() {
             }
         }
 
-        binding.recyclerView.adapter = ImageAdapter(mutableListOf())
+        binding.recyclerView.adapter = ImageAdapter(mutableListOf()).apply {
+            onItemClick { _, item, _ ->
+                val args = Bundle().apply {
+                    val gson = Gson()
+                    this.putString(ImageDetailsFragment.IMAGE_ARGUMENT, gson.toJson(item))
+                }
+                NavHostFragment.findNavController(this@WaifuImFragment)
+                    .navigate(R.id.action_WaifuImFragment_to_ImageDetailsFragment, args)
+            }
+        }
 
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.items.collect {
